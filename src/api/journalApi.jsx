@@ -1,9 +1,9 @@
-const API_LINK="https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev/journal"
+const API_LINK="https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev"
 
 export async function createJournalEntry(data) {
   try {
     const response = await fetch(
-      '/api/journal',
+      `${API_LINK}/journal`,
       {
         method: "POST",
         headers: {
@@ -28,7 +28,7 @@ export async function createJournalEntry(data) {
 export async function getJournalByID(id) {
   try {
     const response = await fetch(
-      `/api/get-journal-by-id?id=${id}`,
+      `${API_LINK}/get-journal-by-id?id=${id}`,
       {
         method: "GET",
         headers: {
@@ -51,7 +51,7 @@ export async function getJournalByID(id) {
 export async function getJournalByUserID(userID) {
   try {
     const response = await fetch(
-      `/api/journals?userId=${userID}`,
+      `${API_LINK}/journals?userId=${userID}`,
       {
         method: "GET",
         headers: {
