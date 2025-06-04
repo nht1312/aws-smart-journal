@@ -10,13 +10,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/dev'),
-      },
-    },
-  },
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com',
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, '/dev'),
+  //     },
+  //   },
+  // },
 })

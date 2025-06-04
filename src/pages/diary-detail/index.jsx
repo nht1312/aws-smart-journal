@@ -10,23 +10,6 @@ export default function DiaryDetail() {
 
     const [detail, setDetail] = useState({});
     const [loading, setLoading] = useState(true);
-    const diaryDetailObject = {
-        "message": "Journal saved",
-        "data": {
-            "id": "rtujavwii3k6zrnmv79fvg",
-            "userId": "user123",
-            "timestamp": 1747899322037,
-            "text": "vui vẻ",
-            "title": "Test",
-            "date": "2025-05-21T17:00:00.000Z",
-            "weather": "sunny",
-            "ai": {
-                "mood": "😄 Vui vẻ",
-                "summary": "Bạn đang có một ngày thật tốt đẹp!",
-                "suggestion": "Ghi nhớ cảm xúc này để tiếp thêm động lực sau này."
-            }
-        }
-    };
 
     const fetchData = async () => {
         try {

@@ -1,3 +1,4 @@
+
 const API_LINK =
   "https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev/journal";
 import { GoogleGenAI } from "@google/genai";
@@ -44,6 +45,20 @@ export async function createJournalEntry(data) {
       },
       body: JSON.stringify(enrichedData),
     });
+const API_LINK="https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev"
+
+export async function createJournalEntry(data) {
+  try {
+    const response = await fetch(
+      `${API_LINK}/journal`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to create journal entry");
