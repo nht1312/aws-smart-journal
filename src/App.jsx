@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import MoodBackground from "./components/MoodBackground";
 import SideMenu from './components/side-menu'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { getToken } from './api/journalApi';
