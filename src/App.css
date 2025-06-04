@@ -64,3 +64,111 @@ button:focus-visible {
     color: gray
   }
 }
+
+/* Mood Animations */
+@keyframes sunny {
+  0% {
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    transform: scale(1);
+  }
+  50% {
+    background: linear-gradient(120deg, #f6d365 20%, #fda085 80%);
+    transform: scale(1.02);
+  }
+  100% {
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    transform: scale(1);
+  }
+}
+
+@keyframes rainy {
+  0% {
+    background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+    transform: translateY(0);
+  }
+  50% {
+    background: linear-gradient(120deg, #89f7fe 20%, #66a6ff 80%);
+    transform: translateY(-5px);
+  }
+  100% {
+    background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+    transform: translateY(0);
+  }
+}
+
+@keyframes angry {
+  0% {
+    background: linear-gradient(120deg, #ff9a9e 0%, #ff5252 100%);
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-1deg);
+  }
+  75% {
+    transform: rotate(1deg);
+  }
+  100% {
+    background: linear-gradient(120deg, #ff9a9e 0%, #ff5252 100%);
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes peaceful {
+  0% {
+    background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+    opacity: 0.9;
+  }
+  50% {
+    background: linear-gradient(120deg, #a8edea 20%, #fed6e3 80%);
+    opacity: 1;
+  }
+  100% {
+    background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+    opacity: 0.9;
+  }
+}
+
+@keyframes anxious {
+  0% {
+    background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.01);
+  }
+  75% {
+    transform: scale(0.99);
+  }
+  100% {
+    background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    transform: scale(1);
+  }
+}
+
+/* Mood Animation Classes */
+.mood-animation {
+  transition: all 0.5s ease;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.mood-happy {
+  animation-name: sunny;
+}
+
+.mood-sad {
+  animation-name: rainy;
+}
+
+.mood-angry {
+  animation-name: angry;
+}
+
+.mood-peaceful {
+  animation-name: peaceful;
+}
+
+.mood-anxious {
+  animation-name: anxious;
+}
