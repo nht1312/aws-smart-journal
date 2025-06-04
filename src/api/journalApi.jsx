@@ -1,7 +1,7 @@
 
-const API_LINK =
-  "https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev/journal";
 import { GoogleGenAI } from "@google/genai";
+const API_LINK="https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev"
+
 
 // Initialize Gemini API
 const genAI = new GoogleGenAI({
@@ -38,47 +38,32 @@ export async function createJournalEntry(data) {
       },
     };
 
-    const response = await fetch("/api/journal", {
+    const response = await fetch(`${API_LINK}/journal`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(enrichedData),
     });
-const API_LINK="https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev"
 
-export async function createJournalEntry(data) {
-  try {
-    const response = await fetch(
-      `${API_LINK}/journal`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to create journal entry");
-    }
-
-    return await response.json();
-  } catch (error) {
+     return await response.json();
+  }
+  catch {
     console.error("Error creating journal entry:", error);
     throw error;
   }
 }
 
+
 export async function getJournalByID(id) {
   try {
-    const response = await fetch(`/api/get-journal-by-id?id=${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${API_LINK}/get-journal-by-id?id=${id}`,
+      {
+        method: "GET",
+        mode: "cors"
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to get journal entry");
@@ -93,12 +78,13 @@ export async function getJournalByID(id) {
 
 export async function getJournalByUserID(userID) {
   try {
-    const response = await fetch(`/api/journals?userId=${userID}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${API_LINK}/journals?userId=${userID}`,
+      {
+        method: "GET",
+        mode: "cors"
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to get journal entry");
@@ -107,6 +93,30 @@ export async function getJournalByUserID(userID) {
     return await response.json();
   } catch (error) {
     console.error("Error getting journal entry:", error);
+    throw error;
+  }
+}
+
+export async function getToken(code) {
+  try {
+    const response = await fetch(
+      `${API_LINK}/get-token`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          code: code, 
+        }),
+        mode: "cors"
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get token");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to get token", error);
     throw error;
   }
 }

@@ -3,6 +3,8 @@ import DateInput from "../../components/date-picker.jsx";
 import Spinner from "../../components/spinner.jsx";
 import { createJournalEntry } from "../../api/journalApi.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth.jsx";
+import { LOGIN_PAGE } from "../../const/index.js";
 
 export default function CreateDiary() {
     const navigation = useNavigate();
@@ -11,9 +13,10 @@ export default function CreateDiary() {
         weather: "",
         title: "",
         text: "",
-        "userId": "user123",
+        userId: "",
     });
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
 
     const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
@@ -26,6 +29,10 @@ export default function CreateDiary() {
         event.preventDefault();
         setLoading(true);
         try {
+            setFormData((prevData) => ({
+                ...prevData,
+                ["userId"]: user["cognito:username"],
+            }));
             const result = await createJournalEntry(formData);
             console.log("Submitted successfully:", result);
 
@@ -78,17 +85,31 @@ export default function CreateDiary() {
                     />
                 </div>
 
-                <div className="flex justify-end mt-6">
-                    <button
-                        className="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition"
-                        onClick={handleSubmit}
-                    >
-                        Add
-                    </button>
-                </div>
+                {user && (
+                    <div className="flex justify-end mt-6">
+                        <button
+                            className="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition"
+                            onClick={handleSubmit}
+                        >
+                            Add
+                        </button>
+                    </div>
+                )}
+
+                {!user && (
+                    <div className="flex justify-end mt-6">
+                        <a
+                            key='login'
+                            href={LOGIN_PAGE}
+                            className="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition"
+                        >
+                            Please login to save your journal
+                        </a>
+                    </div>
+                )}
 
                 {loading && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 h-screen w-screen">
+                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-50">
                         <Spinner />
                     </div>
                 )}

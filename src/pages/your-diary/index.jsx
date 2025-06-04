@@ -2,14 +2,16 @@ import Card from "../../components/card";
 import { getJournalByUserID } from "../../api/journalApi";
 import Spinner from "../../components/spinner";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function YourDiary() {
     const [loading, setLoading] = useState(true);
-    const [journals, setJournals] = useState([]);
+    const [journals, setJournals] = useState(null);
+    const { user } = useAuth();
 
-    const fetchData = async () => {
+    const fetchData = async (user) => {
         try {
-            const result = await getJournalByUserID("user123");
+            const result = await getJournalByUserID(user["cognito:username"]);
 
             setJournals(result);
             setLoading(false);
@@ -18,12 +20,17 @@ export default function YourDiary() {
         }
     };
 
+
     useEffect(() => {
-        if (journals.length === 0) {
+        if (user) {
             setLoading(true);
-            fetchData();
+            fetchData(user);
         }
-    }, [journals]);
+        else {
+            setLoading(false);
+            setJournals([]);
+        }
+    }, [user]);
 
 
     return (
@@ -33,7 +40,7 @@ export default function YourDiary() {
                     <Spinner />
                 </div>
             )}
-            {(journals.length > 0) && (
+            {(journals && journals.length > 0) && (
                 <div className="w-full h-full overflow-y-auto">
                     <div className="flex justify-center flex-wrap">
                         {journals.map((journal) => (

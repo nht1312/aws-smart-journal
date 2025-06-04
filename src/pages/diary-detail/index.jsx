@@ -51,7 +51,7 @@ export default function DiaryDetail() {
                         </div>
 
                         <div className="mb-2">
-                            <h2 className="text-[35px]  ">Dear diary,</h2>
+                            <h2 className="text-[35px]">Dear diary,</h2>
                         </div>
 
                         <div className="mb-10 text-justify">
