@@ -1,44 +1,36 @@
-
 import { GoogleGenAI } from "@google/genai";
-const API_LINK="https://vdft9knjc2.execute-api.ap-southeast-2.amazonaws.com/dev"
-
+import { API_CONFIG, AI_PROMPTS } from "../config/api.config";
 
 // Initialize Gemini API
 const genAI = new GoogleGenAI({
-  apiKey: "AIzaSyB0YYZ0ImGoIieEVjQLO3NEWJDPHC3BHfs",
+  apiKey: API_CONFIG.GEMINI_API_KEY,
 });
 
-// Helper function to generate prompts
-function generatePrompts(text) {
-  return {
-    summary: `Hãy cung cấp một bản tóm tắt ngắn gọn, đầy thấu cảm về nhật ký sau đây. Tập trung vào nội dung cảm xúc và các sự kiện chính: "${text}"`,
-    suggestion: `Dựa trên nội dung nhật ký này, hãy đưa ra một lời khuyên hoặc gợi ý mang tính hỗ trợ và chân thành có thể giúp người viết: "${text}"`,
-    mood: `Phân tích cảm xúc chủ đạo trong đoạn nhật ký sau và chọn MỘT emoji phù hợp nhất để thể hiện cảm xúc đó. CHỈ trả về emoji, không kèm theo bất kỳ từ nào khác: "${text}"`,
-  };
+class APIError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = "APIError";
+  }
 }
 
 export async function createJournalEntry(data) {
   try {
-    // Generate AI insights first
     const aiInsights = await generateJournalInsights(data.text);
 
     // Dispatch mood change event
-    const moodChangedEvent = new CustomEvent("moodChanged", {
-      detail: { mood: aiInsights.mood },
-    });
-    window.dispatchEvent(moodChangedEvent);
+    window.dispatchEvent(
+      new CustomEvent("moodChanged", {
+        detail: { mood: aiInsights.mood },
+      })
+    );
 
-    // Add AI insights to the data
     const enrichedData = {
       ...data,
-      ai: {
-        summary: aiInsights.summary,
-        suggestion: aiInsights.suggestion,
-        mood: aiInsights.mood,
-      },
+      ai: aiInsights,
     };
 
-    const response = await fetch(`${API_LINK}/journal`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/journal`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,112 +38,119 @@ export async function createJournalEntry(data) {
       body: JSON.stringify(enrichedData),
     });
 
-     return await response.json();
-  }
-  catch {
+    if (!response.ok) {
+      throw new APIError("Failed to create journal entry", response.status);
+    }
+
+    return await response.json();
+  } catch (error) {
     console.error("Error creating journal entry:", error);
-    throw error;
+    throw error instanceof APIError
+      ? error
+      : new APIError("Internal server error", 500);
   }
 }
-
 
 export async function getJournalByID(id) {
   try {
     const response = await fetch(
-      `${API_LINK}/get-journal-by-id?id=${id}`,
+      `${API_CONFIG.BASE_URL}/get-journal-by-id?id=${id}`,
       {
         method: "GET",
-        mode: "cors"
+        mode: "cors",
       }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to get journal entry");
+      throw new APIError(
+        `Failed to get journal entry with ID: ${id}`,
+        response.status
+      );
     }
 
     return await response.json();
   } catch (error) {
     console.error("Error getting journal entry:", error);
-    throw error;
+    throw error instanceof APIError
+      ? error
+      : new APIError("Internal server error", 500);
   }
 }
 
 export async function getJournalByUserID(userID) {
   try {
     const response = await fetch(
-      `${API_LINK}/journals?userId=${userID}`,
+      `${API_CONFIG.BASE_URL}/journals?userId=${userID}`,
       {
         method: "GET",
-        mode: "cors"
+        mode: "cors",
       }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to get journal entry");
+      throw new APIError(
+        `Failed to get journal entries for user: ${userID}`,
+        response.status
+      );
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Error getting journal entry:", error);
-    throw error;
+    console.error("Error getting journal entries:", error);
+    throw error instanceof APIError
+      ? error
+      : new APIError("Internal server error", 500);
   }
 }
 
 export async function getToken(code) {
   try {
-    const response = await fetch(
-      `${API_LINK}/get-token`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          code: code, 
-        }),
-        mode: "cors"
-      }
-    );
+    const response = await fetch(`${API_CONFIG.BASE_URL}/get-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code }),
+      mode: "cors",
+    });
 
     if (!response.ok) {
-      throw new Error("Failed to get token");
+      throw new APIError("Failed to get authentication token", response.status);
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Failed to get token", error);
-    throw error;
+    console.error("Failed to get token:", error);
+    throw error instanceof APIError
+      ? error
+      : new APIError("Internal server error", 500);
   }
 }
 
-export async function generateJournalInsights(text) {
+async function generateJournalInsights(text) {
   try {
-    const prompts = generatePrompts(text);
-
-    // Generate summary, suggestion, and mood in parallel
     const [summaryResult, suggestionResult, moodResult] = await Promise.all([
       genAI.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: prompts.summary,
+        contents: AI_PROMPTS.SUMMARY(text),
       }),
       genAI.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: prompts.suggestion,
+        contents: AI_PROMPTS.SUGGESTION(text),
       }),
       genAI.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: prompts.mood,
+        contents: AI_PROMPTS.MOOD(text),
       }),
     ]);
 
-    const summary = summaryResult.text;
-    const suggestion = suggestionResult.text;
-    const mood = moodResult.text;
-
     return {
-      summary,
-      suggestion,
-      mood,
+      summary: summaryResult.text,
+      suggestion: suggestionResult.text,
+      mood: moodResult.text,
     };
   } catch (error) {
     console.error("Error generating journal insights:", error);
-    throw error;
+    throw new APIError("Failed to generate AI insights", 500);
   }
 }
