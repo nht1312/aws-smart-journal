@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import SideMenu from "./components/side-menu";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -7,12 +7,32 @@ import { parseJwt } from "./utils/stringUtils";
 import { useAuth } from "./hooks/useAuth";
 
 function App() {
-  const [currentMood, setCurrentMood] = useState("😊"); // Default mood
+  const hasFetchedToken = useRef(false);
+  const [currentMood, setCurrentMood] = useState("😊"); 
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, setUser } = useAuth();
+  const { setUser } = useAuth();
 
-  // Listen for mood changes from journal entries
+  const fetchUser = async () => {
+    if (hasFetchedToken.current) return;
+
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    const storedUser = localStorage.getItem("user");
+
+    if (code && !storedUser) {
+      try {
+        hasFetchedToken.current = true;
+        const data = await getToken(code);
+        const user = parseJwt(data.id_token);
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+      } catch (err) {
+        console.error("Token exchange failed:", err);
+      }
+    }
+  };
+
   useEffect(() => {
     const handleMoodChange = (event) => {
       if (event.detail?.mood) {
