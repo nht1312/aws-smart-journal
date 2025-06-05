@@ -43,8 +43,9 @@ export default function YourDiary() {
             {(journals && journals.length > 0) && (
                 <div className="w-full h-full overflow-y-auto">
                     <div className="flex justify-center flex-wrap">
-                        {journals.map((journal) => (
+                        {journals.map((journal, index) => (
                             <Card
+                                key={index}
                                 data={journal}
                             />
                         ))}

@@ -2,8 +2,6 @@ import { menuItems , LOGIN_PAGE, LOGOUT_URL} from "../const";
 import { useAuth } from "../hooks/useAuth";
 
 export default function SideMenu() {
-    
-    
     const { user , setUser} = useAuth();
     const handleClick = () => {
       localStorage.removeItem("user");
@@ -25,13 +23,6 @@ export default function SideMenu() {
                         {item.label}
                     </a>
                 ))}
-                {/* {user && <a
-                    key='Logout'
-                    className="px-4 py-2 rounded-md text-gray-700"
-                    onClick={handleClick}
-                >
-                    Logout
-                </a>} */}
                 {!user && <a
                     key='login'
                     href={LOGIN_PAGE}
