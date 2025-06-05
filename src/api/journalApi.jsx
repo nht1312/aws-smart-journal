@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { API_CONFIG, AI_PROMPTS } from "../config/api_config";
+import { API_CONFIG, AI_PROMPTS } from "../config/api.config";
 
 // Initialize Gemini API
 const genAI = new GoogleGenAI({
