@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
-import SideMenu from './components/side-menu'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { getToken } from './api/journalApi';
-import { parseJwt } from './utils/stringUtils';
-import { useAuth } from './hooks/useAuth';
+import SideMenu from "./components/side-menu";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { getToken } from "./api/journalApi";
+import { parseJwt } from "./utils/stringUtils";
+import { useAuth } from "./hooks/useAuth";
 
 function App() {
   const hasFetchedToken = useRef(false);
@@ -45,18 +45,33 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchUser();
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+
+    if (code && user == null) {
+      getToken(code)
+        .then((data) => {
+          const user = parseJwt(data.id_token);
+          setUser(JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user));
+
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.error("Token exchange failed:", err);
+        });
+    }
   }, [location.search, navigate]);
 
-
-
   return (
-      <div className="flex min-h-screen w-screen">
-        <SideMenu />
-        <div className="flex-1 relative p-8 max-h-[100vh]">
+    <div className="flex min-h-screen w-screen bg-gray-50">
+      <SideMenu />
+      <main className="flex-1 ml-64">
+        <div className="max-w-7xl mx-auto p-8">
           <Outlet />
         </div>
-      </div>
+      </main>
+    </div>
   );
 }
 
