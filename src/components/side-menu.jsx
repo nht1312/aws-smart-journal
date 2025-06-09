@@ -1,4 +1,4 @@
-import { menuItems, LOGIN_PAGE } from "../const";
+import { menuItems, LOGIN_PAGE, LOGOUT_URL } from "../const";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,16 +11,19 @@ export default function SideMenu() {
   const menuRef = useRef(null);
   const itemsRef = useRef([]);
 
-  const handleLogout = () => {
+  const handleLogout = (ev) => {
     // Animate out
+    
     gsap.to(menuRef.current, {
       x: -20,
       opacity: 0,
       duration: 0.3,
       ease: "power2.in",
       onComplete: () => {
-        localStorage.removeItem("user");
+        document.cookie = "token=; path=/; max-age=0";
         setUser(null);
+         // Redirect sau animation
+          window.location.href =LOGOUT_URL;
         // Animate back in
         gsap.to(menuRef.current, {
           x: 0,
@@ -28,6 +31,7 @@ export default function SideMenu() {
           duration: 0.3,
           ease: "power2.out",
         });
+
       },
     });
   };
@@ -71,8 +75,6 @@ export default function SideMenu() {
         return "🏠";
       case "log out":
         return "👋";
-      case "login":
-        return "🔑";
       default:
         return "📝";
     }
@@ -88,9 +90,9 @@ export default function SideMenu() {
 
       {/* Logo section */}
       <div className="relative p-6 border-b border-gray-100">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-3">
+        <h2 className="text font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-3">
           <span className="text-3xl">📔</span>
-          My Diary
+          Nhật ký của mình
         </h2>
       </div>
 
@@ -104,14 +106,19 @@ export default function SideMenu() {
                 key={item.label}
                 ref={(el) => (itemsRef.current[index] = el)}
                 href={item.href}
-                onClick={item.isHandleOnClick ? handleLogout : undefined}
+                onClick={(e) => {
+                    if (item.isHandleOnClick) {
+                        e.preventDefault();  // <- Đặt tại đây!
+                            handleLogout();
+                    }
+                }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base transition-all duration-200 ${
                   isActive
                     ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
                     : "text-gray-600 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50"
                 }`}
               >
-                <span className="text-xl">{getMenuItemIcon(item.label)}</span>
+                <span className="text-xl">{getMenuItemIcon(item.tag)}</span>
                 {item.label}
               </a>
             );
@@ -124,19 +131,8 @@ export default function SideMenu() {
             className="flex items-center gap-3 px-4 py-3 rounded-xl text-base text-gray-600 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-200"
           >
             <span className="text-xl">🔑</span>
-            Login
+            Đăng nhập
           </a>
-        )}
-
-        {/* Add New Diary Button (inside menu for mobile responsiveness) */}
-        {user && (
-          <button
-            onClick={() => navigate("/new-diary")}
-            className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl py-3 px-4 flex items-center gap-3 hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
-          >
-            <span className="text-xl">✨</span>
-            New Diary
-          </button>
         )}
       </nav>
 
@@ -149,9 +145,9 @@ export default function SideMenu() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-700 truncate">
-                {user.email}
+                {user["cognito:username"]}
               </p>
-              <p className="text-xs text-gray-500">Logged in</p>
+              <p className="text-xs text-gray-500">Đang hoạt động</p>
             </div>
           </div>
         </div>

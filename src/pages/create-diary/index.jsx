@@ -89,13 +89,13 @@ export default function CreateDiary() {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title?.trim()) {
-      newErrors.title = "Please enter a title";
+      newErrors.title = "Vui lòng nhập tiêu đề cho nhật ký";
     }
     if (!formData.date) {
-      newErrors.date = "Please select a date";
+      newErrors.date = "Vui lòng nhập ngày của nhật ký";
     }
     if (!formData.text?.trim()) {
-      newErrors.text = "Please write your story";
+      newErrors.text = "Vui lòng nhập nội dung của nhật ký";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -166,17 +166,17 @@ export default function CreateDiary() {
       <div className="bg-white rounded-2xl shadow-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Create New Journal Entry ✨
+            Bắt đầu ghi chép mới ✨
           </h1>
           <p className="text-gray-500 mt-2">
-            Capture your thoughts, feelings, and moments
+            Ghi lại suy nghĩ, cảm xúc và khoảnh khắc của bạn
           </p>
         </div>
 
         <FormField
           label={
             <>
-              Title <span className="text-2xl">📝</span>
+              Tiêu đề <span className="text-2xl">📝</span>
             </>
           }
           error={errors.title}
@@ -184,7 +184,7 @@ export default function CreateDiary() {
         >
           <input
             type="text"
-            placeholder="Give your entry a title..."
+            placeholder="Đặt tiêu đề cho trang nhật ký này của bạn..."
             value={formData.title}
             onChange={(e) => handleInputChange("title", e.target.value)}
             className="w-full px-4 py-3 text-lg rounded-xl border-2 border-gray-200 focus:border-purple-400 focus:ring focus:ring-purple-100 transition-all duration-200 outline-none"
@@ -194,7 +194,7 @@ export default function CreateDiary() {
         <FormField
           label={
             <>
-              Date <span className="text-2xl">📅</span>
+              Ngày <span className="text-2xl">📅</span>
             </>
           }
           error={errors.date}
@@ -202,7 +202,7 @@ export default function CreateDiary() {
         >
           <DateInput
             value={formData.date}
-            placeholder="Select a date..."
+            placeholder="Chọn một ngày..."
             handleChange={(date) => handleInputChange("date", date)}
           />
         </FormField>
@@ -210,14 +210,14 @@ export default function CreateDiary() {
         <FormField
           label={
             <>
-              Weather <span className="text-2xl">🌤️</span>
+              Thời tiết <span className="text-2xl">🌤️</span>
             </>
           }
           delay={0.3}
         >
           <input
             type="text"
-            placeholder="How's the weather today?"
+            placeholder="Thời tiết hôm nay như thế nào..."
             value={formData.weather}
             maxLength={15}
             onChange={(e) => handleInputChange("weather", e.target.value)}
@@ -229,7 +229,7 @@ export default function CreateDiary() {
           label={
             <div className="flex justify-between items-center w-full">
               <div className="flex items-center gap-2">
-                Your Story <span className="text-2xl">💭</span>
+                Câu chuyện của bạn <span className="text-2xl">💭</span>
               </div>
               <SpeechToText onTranscript={handleSpeechInput} />
             </div>
@@ -238,7 +238,7 @@ export default function CreateDiary() {
           delay={0.4}
         >
           <textarea
-            placeholder="Tell me about your day..."
+            placeholder="Kể lại câu chuyện của bạn..."
             value={formData.text}
             onChange={(e) => handleInputChange("text", e.target.value)}
             className="w-full h-64 px-4 py-3 text-lg rounded-xl border-2 border-gray-200 focus:border-purple-400 focus:ring focus:ring-purple-100 transition-all duration-200 outline-none resize-none"
@@ -267,7 +267,7 @@ export default function CreateDiary() {
               href={LOGIN_PAGE}
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-lg font-medium hover:shadow-lg hover:scale-105 transition-all duration-200"
             >
-              Login to Save Your Journal
+              Hãy đăng nhập để lưu lại nhật ký
             </a>
           </div>
         )}

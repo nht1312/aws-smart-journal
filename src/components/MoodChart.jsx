@@ -137,10 +137,10 @@ const MoodChart = ({ journals }) => {
     <div className="w-full h-[500px] bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl">
       <div className="mb-6">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Mood Journey ✨
+          Hành trình cảm xúc ✨
         </h2>
         <p className="text-gray-500 mt-2">
-          Track your emotional waves through time
+          Theo dõi những con sóng cảm xúc theo thời gian
         </p>
       </div>
 

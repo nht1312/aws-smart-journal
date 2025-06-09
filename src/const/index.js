@@ -1,15 +1,25 @@
-export const LOGIN_PAGE = 'https://ap-southeast-20jp1e88vh.auth.ap-southeast-2.amazoncognito.com/login?client_id=6vcoj0co2du99jr2ea6p2mfheg&response_type=code&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2F';
-export const LOGOUT_URL = 'https://ap-southeast-20jp1e88vh.auth.ap-southeast-2.amazoncognito.com/logout?client_id=6vcoj0co2du99jr2ea6p2mfheg&logout_uri=http%3A%2F%2Flocalhost%3A5173%2F';
+export const LOGIN_PAGE = "https://ap-southeast-20jp1e88vh.auth.ap-southeast-2.amazoncognito.com/login?client_id=6vcoj0co2du99jr2ea6p2mfheg&response_type=code&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2F";
+//redirect_uri=https://staging.d2offfgi7j3soh.amplifyapp.com/
+export const LOGOUT_URL = "https://ap-southeast-20jp1e88vh.auth.ap-southeast-2.amazoncognito.com/logout?client_id=6vcoj0co2du99jr2ea6p2mfheg&logout_uri=http%3A%2F%2Flocalhost%3A5173%2F";
+//logout_uri=https://staging.d2offfgi7j3soh.amplifyapp.com/
 
 export const menuItems = [
   {
-    label: "Home", 
+    tag: "home",
+    label: "Trang chủ", 
     href: "/",
     isHandleOnClick: false
   },
   {
-    label: "Log Out", 
-    href: LOGOUT_URL,
+    tag:  "createNew",
+    label: "Viết vài dòng", 
+    href: "/new-diary",
+    isHandleOnClick: false
+  },
+  {
+    tag: "log out",
+    label: "Đăng xuất", 
+    href: "#",
     isHandleOnClick: true
   },
 ];

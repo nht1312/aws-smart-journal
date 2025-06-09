@@ -5,6 +5,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getToken } from "./api/journalApi";
 import { parseJwt } from "./utils/stringUtils";
 import { useAuth } from "./hooks/useAuth";
+import { getCookie } from "./utils/tokenUtils";
 
 function App() {
   const hasFetchedToken = useRef(false);
@@ -18,15 +19,15 @@ function App() {
 
     const params = new URLSearchParams(location.search);
     const code = params.get("code");
-    const storedUser = localStorage.getItem("user");
+    const cookieToken = getCookie("token");
 
-    if (code && !storedUser) {
+    if (code && !cookieToken) {
       try {
         hasFetchedToken.current = true;
-        const data = await getToken(code);
-        const user = parseJwt(data.id_token);
+        const tokenObj = await getToken(code);
+        const user = parseJwt(tokenObj.id_token);
         setUser(user);
-        localStorage.setItem("user", JSON.stringify(user));
+        document.cookie = `token=${tokenObj.id_token}; path=/; max-age=${user.exp - Math.floor(Date.now() / 1000)}`;
       } catch (err) {
         console.error("Token exchange failed:", err);
       }
@@ -45,22 +46,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const code = params.get("code");
-
-    if (code && user == null) {
-      getToken(code)
-        .then((data) => {
-          const user = parseJwt(data.id_token);
-          setUser(JSON.stringify(user));
-          localStorage.setItem("user", JSON.stringify(user));
-
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.error("Token exchange failed:", err);
-        });
-    }
+    fetchUser();
   }, [location.search, navigate]);
 
   return (

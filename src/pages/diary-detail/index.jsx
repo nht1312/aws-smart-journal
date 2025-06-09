@@ -96,7 +96,7 @@ export default function DiaryDetail() {
         ref={containerRef}
         className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10"
       >
-        <ContentSection title="Journal Entry" emoji="📖" delay={0}>
+        <ContentSection title="Trang nhật ký" emoji="📖" delay={0}>
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 pb-4 border-b border-gray-100">
               <h1 className="text-3xl font-bold text-gray-900 break-words sm:max-w-[70%]">
@@ -126,7 +126,7 @@ export default function DiaryDetail() {
         </ContentSection>
 
         {detail.ai && (
-          <ContentSection title="AI Insights" emoji="✨" delay={0.2}>
+          <ContentSection title="Vài lời từ trợ lý ảo" emoji="✨" delay={0.2}>
             <AIMessage detail={detail.ai} />
           </ContentSection>
         )}

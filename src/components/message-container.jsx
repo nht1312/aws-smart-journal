@@ -38,14 +38,14 @@ export default function AIMessage({ detail }) {
       <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-3">
           <span className="text-3xl">💌</span>
-          Thoughts for You
+          Lời chia sẻ cho bạn
         </h2>
         <p className="text-lg text-gray-700 leading-relaxed">{summary}</p>
       </div>
 
       <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-3">
-          <span className="text-3xl">💖</span>A Piece of Advice
+          <span className="text-3xl">💖</span>Chia sẻ nhỏ dành cho bạn
         </h2>
         <div className="space-y-4">
           {formatSuggestion(suggestion).map((point, index) => (
