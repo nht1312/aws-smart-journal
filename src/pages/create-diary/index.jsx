@@ -165,7 +165,7 @@ export default function CreateDiary() {
     >
       <div className="bg-white rounded-2xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl h-[65px] font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Bắt đầu ghi chép mới ✨
           </h1>
           <p className="text-gray-500 mt-2">
@@ -258,7 +258,7 @@ export default function CreateDiary() {
               disabled={loading}
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-lg font-medium hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              {loading ? "Saving..." : "Save Journal Entry"}
+              {loading ? "Đang ghi..." : "Lưu lại nhật ký này"}
             </button>
           </div>
         ) : (

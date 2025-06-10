@@ -66,8 +66,8 @@ const SpeechToText = ({ onTranscript, language = "vi-VN" }) => {
         onClick={isListening ? stopListening : startListening}
         className={`p-2 rounded-full transition-all duration-200 ${
           isListening
-            ? "bg-red-500 hover:bg-red-600 active:bg-red-700"
-            : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
+            ? "bg-red-500 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600"
+            : "bg-blue-500 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600"
         }`}
         title={isListening ? "Dừng ghi âm" : "Bắt đầu ghi âm"}
         disabled={!window.webkitSpeechRecognition && !window.SpeechRecognition}

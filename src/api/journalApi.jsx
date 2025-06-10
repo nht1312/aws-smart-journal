@@ -1,10 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 import { API_CONFIG, AI_PROMPTS } from "../config/api.config";
+import { getCookie } from "../utils/tokenUtils";
 
 // Initialize Gemini API
 const genAI = new GoogleGenAI({
   apiKey: API_CONFIG.GEMINI_API_KEY,
 });
+
 
 class APIError extends Error {
   constructor(message, statusCode) {
@@ -15,6 +17,7 @@ class APIError extends Error {
 }
 
 export async function createJournalEntry(data) {
+  const cookieToken = getCookie("token");
   try {
     const aiInsights = await generateJournalInsights(data.text);
 
@@ -34,6 +37,7 @@ export async function createJournalEntry(data) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${cookieToken}`,
       },
       body: JSON.stringify(enrichedData),
     });
@@ -52,12 +56,16 @@ export async function createJournalEntry(data) {
 }
 
 export async function getJournalByID(id) {
+  const cookieToken = getCookie("token");
   try {
     const response = await fetch(
       `${API_CONFIG.BASE_URL}/get-journal-by-id?id=${id}`,
       {
         method: "GET",
         mode: "cors",
+        headers: {
+          'Authorization': `Bearer ${cookieToken}`,
+        }
       }
     );
 
@@ -78,12 +86,16 @@ export async function getJournalByID(id) {
 }
 
 export async function getJournalByUserID(userID) {
+  const cookieToken = getCookie("token");
   try {
     const response = await fetch(
       `${API_CONFIG.BASE_URL}/journals?userId=${userID}`,
       {
         method: "GET",
         mode: "cors",
+        headers: {
+          'Authorization': `Bearer ${cookieToken}`,
+        }
       }
     );
 

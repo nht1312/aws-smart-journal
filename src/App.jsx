@@ -26,8 +26,9 @@ function App() {
         hasFetchedToken.current = true;
         const tokenObj = await getToken(code);
         const user = parseJwt(tokenObj.id_token);
-        setUser(user);
+  
         document.cookie = `token=${tokenObj.id_token}; path=/; max-age=${user.exp - Math.floor(Date.now() / 1000)}`;
+        setUser(user);
       } catch (err) {
         console.error("Token exchange failed:", err);
       }
