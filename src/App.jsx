@@ -6,6 +6,7 @@ import { getToken } from "./api/journalApi";
 import { parseJwt } from "./utils/stringUtils";
 import { useAuth } from "./hooks/useAuth";
 import { getCookie } from "./utils/tokenUtils";
+import FullScreenSpinner from "./components/fullscreen-spinner";
 
 function App() {
   const hasFetchedToken = useRef(false);
@@ -13,6 +14,11 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const { setUser } = useAuth();
+
+  const [loadingFromRedirect, setLoadingFromRedirect] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return !!params.get("code");
+  });
 
   const fetchUser = async () => {
     if (hasFetchedToken.current) return;
@@ -26,13 +32,14 @@ function App() {
         hasFetchedToken.current = true;
         const tokenObj = await getToken(code);
         const user = parseJwt(tokenObj.id_token);
-  
         document.cookie = `token=${tokenObj.id_token}; path=/; max-age=${user.exp - Math.floor(Date.now() / 1000)}`;
         setUser(user);
       } catch (err) {
         console.error("Token exchange failed:", err);
       }
     }
+
+    setLoadingFromRedirect(false);
   };
 
   useEffect(() => {
@@ -49,6 +56,10 @@ function App() {
   useEffect(() => {
     fetchUser();
   }, [location.search, navigate]);
+
+  if (loadingFromRedirect) {
+    return <FullScreenSpinner />;
+  }
 
   return (
     <div className="flex min-h-screen w-screen bg-gray-50">

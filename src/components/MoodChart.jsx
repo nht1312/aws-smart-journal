@@ -51,6 +51,7 @@ const MoodChart = ({ journals }) => {
 
   const processData = () => {
     return journals
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
       .map((journal) => {
         const moodValue = moodToValue[journal.ai?.mood?.trim()] ?? 3;
         return {
@@ -59,8 +60,7 @@ const MoodChart = ({ journals }) => {
           moodEmoji: journal.ai?.mood || "😌",
           color: moodColors[moodValue],
         };
-      })
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+      });
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
