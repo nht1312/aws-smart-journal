@@ -5,6 +5,7 @@ import AIMessage from "../../components/message-container";
 import { getJournalByID } from "../../api/journalApi";
 import Spinner from "../../components/spinner";
 import WeatherEffect from "../../components/WeatherEffect";
+import { PlayerContainer } from "../../components/player-container";
 import gsap from "gsap";
 
 const ContentSection = ({ title, children, emoji, delay = 0 }) => {
@@ -52,6 +53,7 @@ export default function DiaryDetail() {
       const result = await getJournalByID(id);
       setDetail(result);
       setLoading(false);
+      console.log(result);
     } catch (error) {
       console.error("Get data error:", error);
       setLoading(false);
@@ -129,6 +131,20 @@ export default function DiaryDetail() {
           <ContentSection title="Vài lời từ trợ lý ảo" emoji="✨" delay={0.2}>
             <AIMessage detail={detail.ai} />
           </ContentSection>
+        )}
+
+        {detail.ai && (
+          <PlayerContainer 
+            title={{
+              youtubeTitle: "Bài hát cho hôm nay",
+              spotifyTitle: "Khi một bài là chưa đủ... đây là cả playlist dành cho bạn"
+            }} 
+            emojies={{
+              youtubeEmoji: "🎵",
+              spotifyEmoji: "🎶"
+            }}
+            detail={detail.ai}
+          />
         )}
 
         <div className="fixed bottom-8 right-8 space-y-4">
