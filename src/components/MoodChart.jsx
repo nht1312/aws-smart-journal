@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { formatDateToDDMMYYYY } from "../utils/stringUtils";
+import { formatDateToDDMMYYYY, extractNumber } from "../utils/stringUtils";
 
 const moodToValue = {
   "😊": 5, // Happy
@@ -28,12 +28,12 @@ const moodToValue = {
 };
 
 const valueToMood = {
-  5: "😊",
-  4: "🙂",
-  3: "😌",
-  2: "😰",
-  1: "😢",
-  0: "😡",
+  5: "5",
+  4: "4",
+  3: "3",
+  2: "2",
+  1: "1",
+  0: "0",
 };
 
 const moodColors = {
@@ -53,11 +53,11 @@ const MoodChart = ({ journals }) => {
     return journals
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .map((journal) => {
-        const moodValue = moodToValue[journal.ai?.mood?.trim()] ?? 3;
+        const moodValue = extractNumber(journal.ai?.score) ?? 3;
         return {
           date: formatDateToDDMMYYYY(journal.date),
           mood: moodValue,
-          moodEmoji: journal.ai?.mood || "😌",
+          moodEmoji: journal.ai?.mood || "🙂",
           color: moodColors[moodValue],
         };
       });
@@ -67,6 +67,7 @@ const MoodChart = ({ journals }) => {
     if (active && payload && payload.length) {
       const moodValue = payload[0].value;
       const color = moodColors[moodValue];
+      const { moodEmoji } = payload[0].payload;
 
       return (
         <div
@@ -80,7 +81,7 @@ const MoodChart = ({ journals }) => {
             {label}
           </p>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{valueToMood[moodValue]}</span>
+            <span className="text-2xl">{moodEmoji}</span>
             <span className="text-lg font-semibold" style={{ color }}>
               {moodValue}/5
             </span>
@@ -100,32 +101,32 @@ const MoodChart = ({ journals }) => {
     return (
       <g>
         {/* Outer circle (glow effect) */}
-        <circle
+        {/* <circle
           cx={cx}
           cy={cy}
           r={isHovered ? 12 : 8}
           fill={payload.color}
           opacity={0.2}
           className="transition-all duration-300"
-        />
+        /> */}
         {/* Inner circle */}
-        <circle
+        {/* <circle
           cx={cx}
           cy={cy}
           r={isHovered ? 6 : 4}
           fill={payload.color}
           className="transition-all duration-300"
-        />
+        /> */}
         {/* Emoji */}
         <text
           x={cx}
-          y={isHovered ? cy - 20 : cy - 15}
+          y={cy}
           textAnchor="middle"
-          fontSize={isHovered ? "16px" : "14px"}
-          className="transition-all duration-300"
-          opacity={isHovered ? 1 : 0}
+          alignmentBaseline="middle"
+          fontSize="15px"
+          
         >
-          {valueToMood[value]}
+          {payload.moodEmoji}
         </text>
       </g>
     );
@@ -183,7 +184,7 @@ const MoodChart = ({ journals }) => {
               domain={[0, 5]}
               ticks={[0, 1, 2, 3, 4, 5]}
               tickFormatter={(value) => valueToMood[value]}
-              tick={{ fontSize: 14 }}
+              tick={{ dx: -10, fontSize: 14 }}
               axisLine={{ stroke: "#eee" }}
               tickLine={{ stroke: "#eee" }}
             />

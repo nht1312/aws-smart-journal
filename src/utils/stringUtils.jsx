@@ -17,3 +17,8 @@ export function parseJwt(token) {
     return null;
   }
 }
+
+export function extractNumber(input) {
+  const match = input.match(/\d+/);
+  return match ? parseInt(match[0], 10) : null;
+}

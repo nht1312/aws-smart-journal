@@ -141,7 +141,7 @@ export async function getToken(code) {
 
 async function generateJournalInsights(text) {
   try {
-    const [summaryResult, suggestionResult, moodResult] = await Promise.all([
+    const [summaryResult, suggestionResult, moodResult, scoreREsult, songResult, keywordResult] = await Promise.all([
       genAI.models.generateContent({
         model: "gemini-2.0-flash",
         contents: AI_PROMPTS.SUMMARY(text),
@@ -154,15 +154,32 @@ async function generateJournalInsights(text) {
         model: "gemini-2.0-flash",
         contents: AI_PROMPTS.MOOD(text),
       }),
+      genAI.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: AI_PROMPTS.SCORE(text),
+      }),
+      genAI.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: AI_PROMPTS.SONG(text),
+      }),
+      genAI.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: AI_PROMPTS.KEYWORDS(text),
+      }),
     ]);
 
     return {
       summary: summaryResult.text,
       suggestion: suggestionResult.text,
       mood: moodResult.text,
+      score: scoreREsult.text,
+      song: songResult.text,
+      keywords: keywordResult.text,
     };
   } catch (error) {
     console.error("Error generating journal insights:", error);
     throw new APIError("Failed to generate AI insights", 500);
   }
 }
+
+
